@@ -29,7 +29,7 @@ public class Main {
         }
     }
 
-    private static Set<Map.Entry<String, Set<String>>> convert(Stream<String> stream){
+    public static Set<Map.Entry<String, Set<String>>> convert(Stream<String> stream){
 
 
         Set<User> distinctUsersWithSetOfEmails = stream
