@@ -8,4 +8,4 @@
 ![alt text](https://sun9-6.userapi.com/Z83XPvDkyDm-pLiddoeV1_959rbAAJbCkQ2bPw/e6cd6yJs4Fo.jpg)
 
 Результаты программы:
-![alt text](https://sun9-36.userapi.com/GzGkb48tcfyBn9Uxt6M0FfcbPJlBf2_2AYM8Vw/F_RzR3N61Hc.jpg)
+![alt text](https://sun9-50.userapi.com/33xJZir9hoL734STEjroG8GLvc1kBuDc70vYpw/QrmLqqNcYHk.jpg)
