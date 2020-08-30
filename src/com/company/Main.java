@@ -21,24 +21,25 @@ public class Main {
             Map<String, Set<String>> distinctUsersWithHashSetOfRelatedEmails,
             Set<String> setEmails,
             Set<Map.Entry<String, Set<String>>> resultCollection
-    ){
+    ) {
         Optional<Map.Entry<String, Set<String>>> optMaxCollection = distinctUsersWithHashSetOfRelatedEmails.entrySet().parallelStream().filter(f -> f.getValue().containsAll(setEmails)).max((a, b) -> a.getValue().size() > b.getValue().size() ? 1 : -1);
-        if(optMaxCollection.isPresent()){
+        if (optMaxCollection.isPresent()) {
             optMaxCollection.get().getValue().addAll(setEmails);
             resultCollection.add(optMaxCollection.get());
         }
     }
 
-    public static Set<Map.Entry<String, Set<String>>> convert(Stream<String> stream){
-
+    public static Set<Map.Entry<String, Set<String>>> convert(Stream<String> stream) {
 
         Set<User> distinctUsersWithSetOfEmails = stream
-                .map((strLine) -> strLine.split(" -> ")).distinct()
-                .filter((array) -> array.length == 2).map(User::new).collect(toCollection(HashSet::new));
+                .map((strLine) -> strLine.split(" -> "))
+                .distinct()
+                .filter((array) -> array.length == 2)
+                .map(User::new)
+                .collect(toCollection(HashSet::new));
 
-
-        Map<String, HashSet<User>> distinctEmailsWithSetOfUsers =
-                distinctUsersWithSetOfEmails//Определелили множество пользователей с их почтой
+        Map<String, HashSet<User>> distinctEmailsWithSetOfUsers
+                = distinctUsersWithSetOfEmails//Определелили множество пользователей с их почтой
                         .parallelStream()//Определим уникальные email и вставим их в Map-коллекцию с пустыми значениями
                         .distinct()
                         .map(User::getEmailCollection)
@@ -53,31 +54,29 @@ public class Main {
 
         Set<Map.Entry<String, Set<String>>> resultCollection = new HashSet<>();
 
-
         distinctEmailsWithSetOfUsers.entrySet()
                 .parallelStream()
                 .map((entry) -> entry.getValue().parallelStream().findAny())
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .forEachOrdered((user) -> {
-                    user.getEmailCollection().addAll
-                            (
-                                    user.getEmailCollection().parallelStream()
-                                            .map((strEmail) -> findUsers(distinctUsersWithSetOfEmails, strEmail)) //Находим связанных с текущей почтой пользователей
-                                            .map(
-                                                    (usersCollection) ->
-                                                            usersCollection.parallelStream()
-                                                                    .map(User::getEmailCollection)
-                                                                    .flatMap(Collection::parallelStream)
-                                                                    .collect(toCollection(HashSet::new))
-                                            )
-                                            .flatMap(Collection::stream)
-                                            .collect(toCollection(HashSet::new))
-                            );
+                    user.getEmailCollection().addAll(
+                            user.getEmailCollection().parallelStream()
+                                    .map((strEmail) -> findUsers(distinctUsersWithSetOfEmails, strEmail)) //Находим связанных с текущей почтой пользователей
+                                    .map(
+                                            (usersCollection)
+                                            -> usersCollection.parallelStream()
+                                                    .map(User::getEmailCollection)
+                                                    .flatMap(Collection::parallelStream)
+                                                    .collect(toCollection(HashSet::new))
+                                    )
+                                    .flatMap(Collection::stream)
+                                    .collect(toCollection(HashSet::new))
+                    );
 
                     Set<String> setEmails = user.getEmailCollection();
 
-                    if(!distinctUsersWithHashSetOfRelatedEmails.containsValue(setEmails)){
+                    if (!distinctUsersWithHashSetOfRelatedEmails.containsValue(setEmails)) {
                         distinctUsersWithHashSetOfRelatedEmails.put(user.getUserName(), setEmails);
                     } else {
                         saveEmailsInResultCollection(distinctUsersWithHashSetOfRelatedEmails, setEmails, resultCollection);
@@ -85,7 +84,7 @@ public class Main {
 
                     //Здесь мы гарантированно можем сказать, что второй раз пользователь с такой электронной почтой нам не встретится,
                     //соответственно сохраняем это значение
-                    if(setEmails.size() == 1){
+                    if (setEmails.size() == 1) {
                         saveEmailsInResultCollection(distinctUsersWithHashSetOfRelatedEmails, setEmails, resultCollection);
                     }
                 });
@@ -108,11 +107,10 @@ public class Main {
             e.printStackTrace();
         }
 
-
         long startTime = System.currentTimeMillis();
         Set<Map.Entry<String, Set<String>>> result = convert(hashSet.stream());
         long endTime = System.currentTimeMillis();
 
-        System.out.println("Total execution time: " + (endTime-startTime) + "ms;\n" + result);
+        System.out.println("Total execution time: " + (endTime - startTime) + "ms;\n" + result);
     }
 }

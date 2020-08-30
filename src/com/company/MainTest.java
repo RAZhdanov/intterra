@@ -4,42 +4,38 @@ import org.junit.jupiter.api.BeforeEach;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toCollection;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MainTest {
-
 
     private Stream<String> stream = null;
 
     @BeforeEach
     void setUp() {
-        stream = Stream.of(
-                (
-                        "user1 -> xxx@ya.ru, foo@gmail.com, lol@mail.ru\n" +
-                                "user2 -> foo@gmail.com, ups@pisem.net\n" +
-                                "user3 -> xyz@pisem.net, vasya@pupkin.com\n" +
-                                "user4 -> ups@pisem.net, aaa@bbb.ru\n" +
-                                "user5 -> xyz@pisem.net"
-                )
-                        .split("\n")
-        );
+
+        String[] array = (
+                "user1 -> xxx@ya.ru, foo@gmail.com, lol@mail.ru\n" +
+                        "user2 -> foo@gmail.com, ups@pisem.net\n" +
+                        "user3 -> xyz@pisem.net, vasya@pupkin.com\n" +
+                        "user4 -> ups@pisem.net, aaa@bbb.ru\n" +
+                        "user5 -> xyz@pisem.net"
+        )
+                .split("\n");
+        stream = Stream.of(array);
     }
 
 
     @org.junit.jupiter.api.Test
     void checkIfLengthOfAllElementsOfSetIsEqual2() {
         HashSet<String[]> strings = stream.map((strLine) -> strLine.split(" -> ")).distinct().filter((array) -> array.length != 2).collect(toCollection(HashSet::new));
-
         assertTrue(strings.isEmpty());
     }
 
     @org.junit.jupiter.api.Test
-    void checkIf() {
+    void checkIfExpectedValuesAreEqualToCurrentOne() {
 
         Set<Map.Entry<String, Set<String>>> resultSet = Main.convert(stream);
 
@@ -60,4 +56,6 @@ class MainTest {
         assertTrue(flgAllMatch1);
         assertTrue(flgAllMatch2);
     }
+
+
 }
