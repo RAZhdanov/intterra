@@ -6,6 +6,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toCollection;
+
 public class User {
     private String userName;
     private Set<String> emailCollection;
@@ -16,7 +18,7 @@ public class User {
     public User(String [] values) {
         if(values != null && values.length == 2){
             userName = values[0];
-            emailCollection = Arrays.stream(values[1].replaceAll("\\s+","").split(",")).collect(Collectors.toSet());
+            emailCollection = Arrays.stream(values[1].replaceAll("\\s+","").split(",")).collect(toCollection(HashSet::new));
         }
     }
 
