@@ -13,8 +13,10 @@ public class User {
     }
 
     public User(String [] values) {
-        userName = values[0];
-        emailCollection = new HashSet<>(Arrays.asList(values[1].replaceAll("\\s+","").split(",")));
+        if(values != null && values.length == 2){
+            userName = values[0];
+            emailCollection = new HashSet<>(Arrays.asList(values[1].replaceAll("\\s+","").split(",")));
+        }
     }
 
     public User(String userName, Set<String> emailCollection) {
