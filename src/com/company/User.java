@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class User {
     private String userName;
@@ -15,7 +16,7 @@ public class User {
     public User(String [] values) {
         if(values != null && values.length == 2){
             userName = values[0];
-            emailCollection = new HashSet<>(Arrays.asList(values[1].replaceAll("\\s+","").split(",")));
+            emailCollection = Arrays.stream(values[1].replaceAll("\\s+","").split(",")).collect(Collectors.toSet());
         }
     }
 
